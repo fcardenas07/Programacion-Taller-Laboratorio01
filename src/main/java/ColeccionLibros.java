@@ -75,6 +75,10 @@ public class ColeccionLibros {
         System.out.println("Ingrese titulo del libro");
     }
 
+    private static void mostrarMensajeIngresarAutor() {
+        System.out.println("Ingrese autor del libro");
+    }
+
     private static String ingresarDetallesLibro() {
         Scanner teclado = new Scanner(System.in);
 
@@ -87,12 +91,8 @@ public class ColeccionLibros {
         return textoIngresado;
     }
 
-    private static void mostrarMensajeIngresarAutor() {
-        System.out.println("Ingrese autor del libro");
-    }
-
     private static void mostrarTodaLaColeccion(String[][] coleccionLibros) {
-        if (buscarFilaVacia(coleccionLibros) == 0) {
+        if (coleccionVacia(coleccionLibros)) {
             System.out.println("Coleccion vacia");
         } else {
             int fila = 0;
