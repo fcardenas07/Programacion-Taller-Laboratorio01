@@ -7,8 +7,7 @@ public class ColeccionLibros {
         Menu(coleccionLibros);
     }
 
-    private static void agregarLibro(String[][] libros) {
-
+    private static String[][] agregarLibro(String[][] libros) {
         if (coleccionNoEstaLlena(libros)) {
             int fila = buscarFilaVacia(libros);
             mostrarMensajeIngresarAutor();
@@ -18,14 +17,13 @@ public class ColeccionLibros {
             mostrarMensajeIngresarEditorial();
             libros[fila][2] = ingresarDetallesLibro();
         }
+        return libros;
     }
 
     private static int buscarFilaVacia(String[][] libros) {
         int fila = 0;
-        for (int i = 0; i < libros.length; i++) {
-            if (libros[i][0] == null) {
-                fila = i;
-            }
+        while (libros[fila][0] != null){
+            fila++;
         }
         return fila;
     }
@@ -66,10 +64,10 @@ public class ColeccionLibros {
         do {
             switch (opcion) {
                 case 1:
-                    agregarLibro(coleccionLibros);
+                    coleccionLibros =  agregarLibro(coleccionLibros);
                     break;
                 case 2:
-                    buscarLibro(coleccionLibros);
+                    buscarLibroPorAutor(coleccionLibros);
                     break;
                 case 3:
                     espaciosUsados = buscarFilaVacia(coleccionLibros);
@@ -101,25 +99,27 @@ public class ColeccionLibros {
     }
 
     private static void mostrarEspaciosDisponibles(String[][] coleccionLibros, int espaciosUsados) {
-        System.out.println("Cantidad espacios disponibles en la coleccion: " + (espaciosUsados - 1));
+        System.out.println("Cantidad espacios disponibles en la coleccion: " + (coleccionLibros.length - espaciosUsados));
+
     }
 
     private static void mostrarEspaciosUsados(String[][] coleccionLibros, int espaciosUsados) {
-        System.out.println("Cantidad de libros en la coleccion: " + (coleccionLibros.length - (espaciosUsados - 1)));
+        System.out.println("Cantidad de libros en la coleccion: " + (espaciosUsados));
     }
 
-    private static void buscarLibro(String[][] coleccionLibros) {
+    private static void buscarLibroPorAutor(String[][] coleccionLibros) {
         System.out.println("Busqueda de Libro");
         mostrarMensajeIngresarAutor();
+
         String libroABuscar = ingresarDetallesLibro();
         int fila = buscarFilaVacia(coleccionLibros);
         int posicionLibro = -1;
 
-        while (coleccionLibros[fila][0] != null) {
+        while (fila > 0 && coleccionLibros[fila - 1][0] != null) {
             if (libroABuscar.equals(coleccionLibros[fila][0])) {
                 posicionLibro = fila;
             }
-            fila++;
+            fila--;
         }
         mostrarResultadoBusqueda(posicionLibro);
     }
