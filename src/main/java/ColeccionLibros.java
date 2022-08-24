@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ColeccionLibros {
@@ -7,17 +8,15 @@ public class ColeccionLibros {
     }
 
     private static void agregarLibro(String[][] libros) {
-        String[] detallesLibro = new String[3];
 
         if (coleccionNoEstaLlena(libros)) {
-            mostrarMensajeIngresarAutor();
-            detallesLibro[0] = ingresarDetallesLibro();
-            mostrarMensajeIngresarTitulo();
-            detallesLibro[1] = ingresarDetallesLibro();
-            mostrarMensajeIngresarEditorial();
-            detallesLibro[2] = ingresarDetallesLibro();
             int fila = buscarFilaVacia(libros);
-            libros[fila] = detallesLibro;
+            mostrarMensajeIngresarAutor();
+            libros[fila][0] = ingresarDetallesLibro();
+            mostrarMensajeIngresarTitulo();
+            libros[fila][1] = ingresarDetallesLibro();
+            mostrarMensajeIngresarEditorial();
+            libros[fila][2] = ingresarDetallesLibro();
         }
     }
 
@@ -62,11 +61,74 @@ public class ColeccionLibros {
     private static void Menu(String[][] coleccionLibros) {
         verMenu();
         int opcion = ingresarOpcion();
+        int espaciosUsados;
 
-        switch (opcion) {
-            case 1:
-                agregarLibro(coleccionLibros);
-                break;
+        do {
+            switch (opcion) {
+                case 1:
+                    agregarLibro(coleccionLibros);
+                    break;
+                case 2:
+                    buscarLibro(coleccionLibros);
+                    break;
+                case 3:
+                    espaciosUsados = buscarFilaVacia(coleccionLibros);
+                    mostrarEspaciosUsados(coleccionLibros, espaciosUsados);
+                    break;
+                case 4:
+                    espaciosUsados = buscarFilaVacia(coleccionLibros);
+                    mostrarEspaciosDisponibles(coleccionLibros, espaciosUsados);
+                    break;
+                case 5:
+                    mostrarTodaLaColeccion(coleccionLibros);
+                    break;
+            }
+            verMenu();
+            opcion = ingresarOpcion();
+        } while (opcion!=6);
+    }
+
+    private static void mostrarTodaLaColeccion(String[][] coleccionLibros) {
+        if (buscarFilaVacia(coleccionLibros) == 0) {
+            System.out.println("Coleccion vacia");
+        } else {
+            int fila = 0;
+            do {
+                System.out.println(Arrays.toString(coleccionLibros[fila]));
+                fila++;
+            } while (buscarFilaVacia(coleccionLibros) != fila);
+        }
+    }
+
+    private static void mostrarEspaciosDisponibles(String[][] coleccionLibros, int espaciosUsados) {
+        System.out.println("Cantidad espacios disponibles en la coleccion: " + (espaciosUsados - 1));
+    }
+
+    private static void mostrarEspaciosUsados(String[][] coleccionLibros, int espaciosUsados) {
+        System.out.println("Cantidad de libros en la coleccion: " + (coleccionLibros.length - (espaciosUsados - 1)));
+    }
+
+    private static void buscarLibro(String[][] coleccionLibros) {
+        System.out.println("Busqueda de Libro");
+        mostrarMensajeIngresarAutor();
+        String libroABuscar = ingresarDetallesLibro();
+        int fila = buscarFilaVacia(coleccionLibros);
+        int posicionLibro = -1;
+
+        while (coleccionLibros[fila][0] != null) {
+            if (libroABuscar.equals(coleccionLibros[fila][0])) {
+                posicionLibro = fila;
+            }
+            fila++;
+        }
+        mostrarResultadoBusqueda(posicionLibro);
+    }
+
+    private static void mostrarResultadoBusqueda(int posicionLibro) {
+        if (posicionLibro != -1) {
+            System.out.println("El libro se encuentra en la posicion: " + posicionLibro);
+        } else {
+            System.out.println("El libro no se encuentra");
         }
     }
 
@@ -93,6 +155,7 @@ public class ColeccionLibros {
     }
 
     private static void verMenu() {
+        System.out.println("------------------------------------");
         System.out.println("Seleccione una opcion");
         System.out.println("1-> AGREGAR LIBRO");
         System.out.println("2-> BUSCAR LIBRO");
@@ -100,6 +163,7 @@ public class ColeccionLibros {
         System.out.println("4-> MOSTRAR ESPACIOS DISPONIBLES");
         System.out.println("5-> MOSTRAR TODA LA COLECCION");
         System.out.println("6-> SALIR");
+        System.out.println("------------------------------------");
     }
 
     private static String[][] crearColeccionLibros() {
